@@ -14,6 +14,19 @@ npm install
 quasar dev
 ```
 
+### Start the server on localhost, PORT=3000 
+```bash
+node src/server/app.js
+```
+or install Nodemon by,
+```bash
+npm install nodemon --location=global
+```
+and then,
+```bash
+nodemon src/server/app.js
+```
+
 
 ### Lint the files
 ```bash
