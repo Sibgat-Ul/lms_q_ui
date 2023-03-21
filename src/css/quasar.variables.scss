@@ -1,0 +1,33 @@
+$primary   : #3fcf8e !default;
+$secondary : #26A69A !default;
+$accent    : #9C27B0 !default;
+
+// used by dark mode
+$dark-page : #1e1e1e !default;
+$dark      : #1a1a1a !default;
+
+$positive  : #21BA45 !default;
+$negative  : #C10015 !default;
+$info      : #31CCEC !default;
+$warning   : #F2C037 !default;
+
+.dark {
+    $primary: $info
+}
+
+.q-btn {
+    background: $primary;
+}
+
+.q-item {
+    color: $primary;
+}
+
+.q-item:hover {
+    background: $primary;
+    color: #fefefe !important;   
+}
+
+.logo {
+
+}
