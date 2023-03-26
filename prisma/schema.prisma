@@ -10,9 +10,51 @@ datasource db {
 model user {
   id       Int        @id @default(autoincrement())
   name     String     @db.VarChar(30)
-  email     String     @db.VarChar(30)
   password String?    @db.VarChar(32)
   role     user_role?
+  email    String     @db.VarChar(30)
+}
+
+model course {
+  course_id String  @id @db.Char(10)
+  title     String? @db.Text
+}
+
+model instructor {
+  id       BigInt    @id @default(autoincrement())
+  name     String    @db.VarChar(30)
+  password String    @db.VarChar(30)
+  teaches  teaches[]
+}
+
+model student {
+  id       BigInt  @default(autoincrement())
+  name     String  @db.VarChar(30)
+  password String  @db.VarChar(30)
+  takes    takes[]
+
+  @@id([id, name])
+}
+
+model takes {
+  id           BigInt   @id @default(autoincrement())
+  course_id    BigInt?
+  title        String?  @db.Text
+  student_id   BigInt?
+  student_name String   @db.VarChar(30)
+  student      student? @relation(fields: [student_id, student_name], references: [id, name], onDelete: Cascade, onUpdate: Restrict, map: "takes_ibfk_1")
+
+  @@index([student_id, student_name], map: "student_id")
+}
+
+model teaches {
+  id            BigInt      @id @default(autoincrement())
+  course_id     BigInt?
+  instructor_id BigInt?
+  instructor    instructor? @relation(fields: [instructor_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "teaches_ibfk_1")
+
+  @@unique([id, course_id, instructor_id], map: "id")
+  @@index([instructor_id], map: "instructor_id")
 }
 
 enum user_role {

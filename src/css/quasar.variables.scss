@@ -11,6 +11,10 @@ $negative  : #C10015 !default;
 $info      : #31CCEC !default;
 $warning   : #F2C037 !default;
 
+body {
+    margin: .2em
+}
+
 .dark {
     $primary: $info
 }
