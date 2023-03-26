@@ -16,7 +16,7 @@ model user {
 }
 
 model course {
-  course_id String  @id @db.Char(10)
+  course_id BigInt  @id @default(autoincrement())
   title     String? @db.Text
 }
 
