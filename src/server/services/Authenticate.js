@@ -5,7 +5,7 @@ function login(credentials) {
         params: {
             email: credentials.email,
             password: credentials.password,
-            role: credentials.group
+            role: credentials.role
         }
     });
 }
@@ -15,7 +15,7 @@ function register(credentials) {
         params: {
             name: credentials.name,
             password: credentials.password,
-            role: credentials.group,
+            role: credentials.role,
             email: credentials.email,
         }
     });

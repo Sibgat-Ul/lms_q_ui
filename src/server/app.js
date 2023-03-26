@@ -11,43 +11,56 @@ app.use(express.json());
 app.use(cors());
 
 app.post('/user/register', (req, res, next) => {
-    console.log('Request URL:', req.originalUrl, req.body, req.query, req.params);
+    console.log('Request URL:', req.originalUrl, req.body);
     next()
   }, 
+
   async(req, res) => {
-    const { name, password, group, email } = req.params;
+    const { name, password, role, email } = req.body.params;
+   
     try {
-        let send = await prisma.user.create({
+        let uGroup = (role == 'i') ? prisma.instructor : prisma.student;
+
+        let send = await uGroup.create({
             data: {
-                name, password, group, email
+                name, password, email
             }
         });
+
         res.json(send);
     } catch(e) {
-        res.json(e)
+        res.json(e);
     }
 })
 
 app.get('/user/login', (req, res, next) => {
-    console.log('Request URL:', req.originalUrl, req.body, req.query, req.params);
+    console.log('Request URL:', req.originalUrl, req.query, req.body);
     next()
   }, 
+
   async(req, res) => {
-    const { email, password, group  } = req.body;
-    let send = await prisma.user.findMany({
-        where: {
-            email: {
-                equals: req.body.email || req.query.email
-            }, 
-            password: {
-                equals: req.body.password || req.query.password
-            }, 
-            role:{
-                equals: req.body.group || req.query.role
-            },
-        }
-    });
-    res.json(send);
+    const { email, password, role } = req.query;
+    //const { email, password, role } = req.body;
+
+    try {
+        let uGroup = (role == 'i') ? prisma.instructor : prisma.student;
+    
+        let send = await uGroup.findMany({
+            where: {
+                email: {
+                    equals: email
+                }, 
+                password: {
+                    equals: password
+                }, 
+            }
+        });
+
+        res.json(send);
+    } catch(e) {
+        console.log(e);
+    }
+
 })
 
 app.listen(3000 || process.env.PORT)
