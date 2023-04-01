@@ -11,7 +11,7 @@
 				</div>
 
 				<div class="grid grid-cols-2 g-1em">
-					<form class="" @submit.prevent="Register">
+					<form class="" @submit.prevent="register()">
 						<h5>
 							Register
 						</h5>
@@ -39,7 +39,7 @@
 
 						<q-option-group inline :options="options" type="radio" v-model="log.role" />
 
-						<q-btn @click="Login" class="bg-primary text-#fefefe" flat> Login </q-btn>
+						<q-btn @click="login()" class="bg-primary text-#fefefe" flat> Login </q-btn>
 					</form>
 				</div>
 			</div>
@@ -48,16 +48,16 @@
 </template>
 
 <script>
-import router from 'src/router/index'
 import { reactive, ref, watch } from 'vue'
 import { login, register } from 'src/server/services/Authenticate.js'
 import { useQuasar } from 'quasar'
+import { authStore } from 'src/stores/auth_store.js'
+import { storeToRefs } from 'pinia'
 
 export default {
 	setup() {
 		let $q = useQuasar();
 		let loginState = 'pending';
-		let res;
 
 		let reg = reactive({
 			name: '',
@@ -71,6 +71,10 @@ export default {
 			password: 'password1',
 			role: 'i'
 		})
+
+		let auth_store = authStore()
+		let infos = storeToRefs(auth_store);
+		let { Login, Register, hello } = auth_store;
 
 		watch(log, (newL) => {
 			console.log(newL.role)
@@ -88,98 +92,107 @@ export default {
 			}
 		]
 
-		async function Register() {
-			try {
-				console.log(reg)
-				res = await register(reg);
-				console.log(res)
-			} catch (err) {
-				console.log(err)
-				$q.notify({
-					position: 'top',
-					type: 'negative',
-					message: res.status + err
-				})
-			} finally {
-				function wait() {
-					if (res.data.code) {
-						$q.notify({
-							type: 'negative',
-							message: 'Error!' + res.data.code
-						})
-					} else {
-						$q.notify({
-							type: 'positive',
-							message: 'Success! Redirecting.'
-						})
-					}
-					return new Promise((resolve) => {
-						setTimeout(() => {
+		async function register() {
+			await Register(reg);
+		}
+		
+		async function login() {
+			await Login(log);
+		}
 
-							resolve('ok');
-							console.log('redirecting')
-						}, 2000)
-					}
-					)
-				}
-				await wait()
-			}
+		// async function Register() {
+		// 	try {
+		// 		console.log(reg)
+		// 		res = await register(reg);
+		// 		console.log(res)
+		// 	} catch (err) {
+		// 		console.log(err)
+		// 		$q.notify({
+		// 			position: 'top',
+		// 			type: 'negative',
+		// 			message: res.status + err
+		// 		})
+		// 	} finally {
+		// 		function wait() {
+		// 			if (res.data.code) {
+		// 				$q.notify({
+		// 					type: 'negative',
+		// 					message: 'Error!' + res.data.code
+		// 				})
+		// 			} else {
+		// 				$q.notify({
+		// 					type: 'positive',
+		// 					message: 'Success! Redirecting.'
+		// 				})
+		// 			}
+		// 			return new Promise((resolve) => {
+		// 				setTimeout(() => {
+
+		// 					resolve('ok');
+		// 					console.log('redirecting')
+		// 				}, 2000)
+		// 			}
+		// 			)
+		// 		}
+		// 		await wait()
+		// 	}
 			
-			//router().push({path:'/dashboard'}).then(() => { router().go() })
-		}
+		// 	//router().push({path:'/dashboard'}).then(() => { router().go() })
+		// }
 
-		async function Login() {
-			try {
-				res = await login(log)
-			} catch (err) {
-				loginState = err;
-				$q.notify({
-					position: 'top',
-					type: 'negative',
-					message: err
-				})
-				console.log(err)
-			} finally {
-				if (res.data.length == 0) {
-					$q.notify({
-						position: 'top',
-						type: 'negative',
-						message: 'Incorrect Email or Password.'
-					})
-				} else {
-					loginState = 'ok'
+		// async function Login() {
+		// 	try {
+		// 		res = await login(log)
+		// 	} catch (err) {
+		// 		loginState = err;
+		// 		$q.notify({
+		// 			position: 'top',
+		// 			type: 'negative',
+		// 			message: err
+		// 		})
+		// 		console.log(err)
+		// 	} finally {
+		// 		if (res.data.length == 0) {
+		// 			$q.notify({
+		// 				position: 'top',
+		// 				type: 'negative',
+		// 				message: 'Incorrect Email or Password.'
+		// 			})
+		// 		} else {
+		// 			loginState = 'ok'
 
-					function wait() {
-						$q.notify({
-							type: 'positive',
-							message: 'Success! Redirecting.'
-						})
+		// 			function wait() {
+		// 				$q.notify({
+		// 					type: 'positive',
+		// 					message: 'Success! Redirecting.'
+		// 				})
 
-						return new Promise((resolve) => {
-							setTimeout(() => {
+		// 				return new Promise((resolve) => {
+		// 					setTimeout(() => {
 
-								resolve('ok');
-								console.log('redirecting')
-							}, 2000)
-						}
-						)
-					}
+		// 						resolve('ok');
+		// 						console.log('redirecting')
+		// 					}, 2000)
+		// 				}
+		// 				)
+		// 			}
 
-					await wait()
-				}
+		// 			await wait()
+		// 		}
 
-				if (loginState == 'ok') {
-					router().push({ path: '/dashboard' }).then(() => { router().go() })
-				}
-			}
-		}
+		// 		if (loginState == 'ok') {
+		// 			console.log(res)
+		// 			//router().push({ path: '/dashboard' }).then(() => { router().go() })
+		// 		}
+		// 	}
+		// }
 
 		return {
 			reg,
 			log,
 			options,
-			Register,
-			Login
+			register,
+			login
 		}
 	}
 }
