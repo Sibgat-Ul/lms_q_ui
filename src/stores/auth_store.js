@@ -8,9 +8,7 @@ export const authStore = defineStore('lms_store', () => {
   let loginState = false;
   let $q = useQuasar();
   let userData = ref(null)
-  let reg = reactive({});
-  let log = reactive({});
-
+  
   function wait(msg) {
     $q.notify({
       position: msg ? 'bottom' : 'top',
@@ -70,14 +68,8 @@ export const authStore = defineStore('lms_store', () => {
     console.log(userData.value);
   }
 
-  function hello() {
-    console.log("someting")
-  }
   return {
     Register,
     Login,
-    hello,
-    reg,
-    log
   }
 })
