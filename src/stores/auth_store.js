@@ -8,12 +8,12 @@ export const authStore = defineStore('lms_store', () => {
   let loginState = false;
   let $q = useQuasar();
   let userData = ref(null)
-  
+
   function wait(msg) {
     $q.notify({
       position: msg ? 'bottom' : 'top',
       type: msg ? 'negative' : 'positive',
-      message: msg ? 'Error!' + msg : 'Success! Redirecting.'
+      message: msg ? 'Error! ' + msg + ', mail is already in use.': 'Success! Redirecting.'
     })
     
     return new Promise((resolve) => {
@@ -26,32 +26,30 @@ export const authStore = defineStore('lms_store', () => {
 
   async function Register(data) {
     console.log(data)
-    let err = null;
+    let err = false;
+    let res;
 
     try {
-      let res = await register(data);
+      res = await register(data);
     } catch (e) {
       err = e;
-      await wait(err);
     } finally {
-      if (!err){
+      if (res.data.code == undefined) {
+        console.log('in reg', err)
         Login({'email': data.email, 'password': data.password, 'role': data.role});
-        return
+      } else {
+        await wait(res.data.code);
       }
     }
-    
-    console.log(userData);
   }
 
   async function Login(data) {
-    console.log(data)
+    console.log('in login')
     let res;
 
     try {
       res = await login(data)
     } catch (err) {
-      loginState = false
-      
       await wait(err)
     } finally {
       if (res.data.length == 0){
@@ -64,8 +62,6 @@ export const authStore = defineStore('lms_store', () => {
         router().push({ path: '/dashboard' }).then(() => { router().go() })
       }
     }
-
-    console.log(userData.value);
   }
 
   return {
