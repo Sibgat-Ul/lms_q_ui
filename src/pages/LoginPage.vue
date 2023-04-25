@@ -40,6 +40,7 @@
 						<q-option-group inline :options="options" type="radio" v-model="log.role" />
 
 						<q-btn @click="login()" class="bg-primary text-#fefefe" flat> Login </q-btn>
+						<!--<q-btn @click="logData()"></q-btn>-->
 					</form>
 				</div>
 			</div>
@@ -73,8 +74,15 @@ export default {
 		})
 
 		let auth_store = authStore()
-		let infos = storeToRefs(auth_store);
-		let { Login, Register, hello } = auth_store;
+		let { Login, Register } = auth_store;
+
+		let userData = storeToRefs(auth_store);
+
+		console.log(userData)
+
+		function logData() {
+			console.log(userData);
+		}
 
 		watch(log, (newL) => {
 			console.log(newL.role)
@@ -105,7 +113,8 @@ export default {
 			log,
 			options,
 			register,
-			login
+			login,
+			logData
 		}
 	}
 }

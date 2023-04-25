@@ -3,11 +3,12 @@ import { reactive, ref } from 'vue'
 import { login, register } from 'src/server/services/Authenticate.js'
 import { useQuasar } from 'quasar'
 import router from 'src/router/index'
+import fs from 'fs'
+import { json } from 'body-parser'
 
 export const authStore = defineStore('lms_store', () => {
-  let loginState = false;
   let $q = useQuasar();
-  let userData = ref(null)
+  let userData = ref('krebal');
 
   function wait(msg) {
     $q.notify({
@@ -49,14 +50,18 @@ export const authStore = defineStore('lms_store', () => {
 
     try {
       res = await login(data)
-    } catch (err) {
+    } 
+    
+    catch (err) {
       await wait(err)
-    } finally {
-      if (res.data.length == 0){
+    } 
+    
+    finally {
+      if (res.data['user'].length == 0){
         await wait("Incorrect Mail or Password")
       } else {
-        loginState = true
-        userData.value = res.data[0]
+        userData.value = res.data
+        console.log(res.data['user'])
 
         await wait()
         router().push({ path: '/dashboard' }).then(() => { router().go() })
@@ -67,5 +72,6 @@ export const authStore = defineStore('lms_store', () => {
   return {
     Register,
     Login,
+    userData
   }
 })

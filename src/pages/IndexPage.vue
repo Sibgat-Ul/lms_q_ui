@@ -1,12 +1,11 @@
 <template>
   <q-page class="w-full h-20rem">
-    <div class="p-2em grid gap-1em grid-cols-[repeat(auto-fit,minmax(12em,1fr))]">
-      <q-card flat bordered class="w-full" v-for="(course, i) in courses" :key="i">
+    <div class="p-2em w-600px grid gap-1em grid-cols-[repeat(auto-fit,minmax(12em,1fr))]">
+      <q-card flat bordered class="w-270px h-auto" v-for="(course, i) in courses" :key="i">
         <img src="https://cdn.quasar.dev/img/mountains.jpg">
 
         <q-card-section >
           <div class="text-h6"> {{ course.title }}.{{ course.sec }} </div>
-          <div class="text-subtitle2"> by {{ course.instructor_initial }} </div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -19,12 +18,22 @@
 
 <script>
 import { defineComponent } from 'vue'
+import { authStore } from 'src/stores/auth_store.js'
+import { storeToRefs } from 'pinia'
+import data from './../../data.json'
 
 export default defineComponent({
   name: 'IndexPage',
   
   setup() {
-    let courses = [{
+		let userData = storeToRefs(authStore());
+    
+    function logData() {
+       console.log(userData);
+       console.log(data)
+		}
+
+    let example = [{
         title: 'course 1',
         sec: 'xyz',
         instructor_initial: 'ABC',
@@ -55,9 +64,12 @@ export default defineComponent({
         img: "#",
       }
     ]       
+
+    let courses = data['course'] == {} ? example : data['course'];
     
     return {
-      courses
+      courses,
+      logData
     }
   }
 })

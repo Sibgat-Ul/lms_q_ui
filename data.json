@@ -1,0 +1,1 @@
+{"user":[{"id":1,"name":"Alice","password":"password1","email":"alice@example.com"}],"course":[{"id":1,"course_id":1,"title":"Mathematics","student_id":1,"student_name":"Alice"},{"id":11,"course_id":2,"title":"English","student_id":1,"student_name":"Alice"}]}

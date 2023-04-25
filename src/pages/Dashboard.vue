@@ -175,6 +175,7 @@ export default defineComponent({
       $q.dark.set(darkMode.value)
     }
 
+
     return {
       leftDrawerOpen,
       miniState,
