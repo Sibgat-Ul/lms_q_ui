@@ -24,6 +24,10 @@
             <q-icon v-else name="o_clear" class="cursor-pointer" @click="search = ''"/>
           </template>
         </q-input>
+
+        <p class="text-1.6rem m-a">
+          Welcome, {{ rData.user[0].name }}!
+        </p>
         
 
         <div class="btns flex justify-around w-auto gap-3">
@@ -53,7 +57,9 @@
                 </q-item>
                 
                 <q-item clickable v-close-popup>
-                  <q-item-section>Log out</q-item-section>
+                  <q-item-section>
+                    <router-link to="/login"></router-link>
+                  </q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
@@ -143,7 +149,6 @@
         </q-scroll-area>
     </q-drawer>
 
-    
     <router-view />
     
 </template>
@@ -151,6 +156,7 @@
 <script>
 import { defineComponent, ref } from 'vue';
 import { useQuasar } from 'quasar';
+import data from './../../data.json';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -160,6 +166,9 @@ export default defineComponent({
 
   setup () {
     let search = ref('')
+    let rData = ref(data)
+
+    console.log(rData)
 
     const leftDrawerOpen = ref(false)
     const miniState = ref(true)
@@ -183,7 +192,8 @@ export default defineComponent({
       drawer,
       toggleDark,
       darkMode,
-      search
+      search,
+      rData
     }
   }
 })
